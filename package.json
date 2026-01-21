@@ -1,0 +1,27 @@
+{
+  "name": "upload-to-drive",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/MaxChristmas/upload-to-drive#readme",
+  "bugs": {
+    "url": "https://github.com/MaxChristmas/upload-to-drive/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaxChristmas/upload-to-drive.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cloudinary": "^2.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^4.19.2",
+    "googleapis": "^140.0.0",
+    "multer": "^2.0.2"
+  }
+}
