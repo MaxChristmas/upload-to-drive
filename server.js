@@ -192,8 +192,7 @@ function renderThankYou() {
    Routes
 -------------------------------- */
 app.get("/", (req, res) => {
-  // res.type("html").send(renderForm());
-  res.type("html").send(renderThankYou());
+  res.type("html").send(renderForm());
 });
 
 app.post(
