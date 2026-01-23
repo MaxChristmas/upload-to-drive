@@ -178,8 +178,11 @@ function renderThankYou() {
   <div class="box">
     <div class="emoji">🙏</div>
     <h1>Merci pour votre participation !</h1>
-    <p>Votre photo a bien été envoyée.</p>
-    <p>Bonne chance et à très bientôt 🙂</p>
+    <p>Pour améliorer vos chances de gagner, laissez-nous un petit commentaire sur Google. Ça nous aide beaucoup !!</p>
+    <a href="https://www.google.com/search?sca_esv=96fddc6d6b8acd12&sxsrf=ANbL-n5Px1ogIIGuP_uIyD03Fv9mBmMG8A:1769163617951&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qObNRdYnoyOg6be55H8RrqwKC1qxDNBW-5Pi-NWDtx68lALVTGpzBLfh0lQXyP3_hQfU8hZLW3BhGEJyY7CcjN4-mhz3YU9Mb8SY1SHV5a704b2OZ6Q%3D%3D&q=La+croix+des+landes+Avis&sa=X&ved=2ahUKEwjFn_2HuKGSAxWMcKQEHa3XKc8Q0bkNegQIIhAH&biw=2304&bih=1144&dpr=1&aic=0">
+      ⭐⭐⭐⭐⭐<br/> <span style="color:#555; font-size: 30px;">4,7/5</span><br/> <span style="color:#555; font-size: 20px;">sur 60 avis Google</span></a>
+    <p style="font-size:20px;">Mille mercis.</p>
+    <p>Toute l'équipe de La Croix Des Landes.</p>
   </div>
 </body>
 </html>`;
@@ -189,7 +192,8 @@ function renderThankYou() {
    Routes
 -------------------------------- */
 app.get("/", (req, res) => {
-  res.type("html").send(renderForm());
+  // res.type("html").send(renderForm());
+  res.type("html").send(renderThankYou());
 });
 
 app.post(
