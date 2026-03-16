@@ -65,70 +65,179 @@ function renderForm({ error = "" } = {}) {
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Envoyer une photo</title>
 <style>
-  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; max-width: 640px; margin: 40px auto; padding: 0 16px; }
-  form { display: grid; gap: 14px; }
-  input, button { padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; }
-  button { cursor: pointer; }
-  .submit{ background-color: #ef5f60; color: white; border: none; border-radius: 10px;}
-  .err { color: #b00020; background: #fff2f2; border: 1px solid #ffd0d0; padding: 12px; border-radius: 12px; margin-bottom: 10px;}
-  .small { font-size: 13px; color: #555; }
-  .pick-grid { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
-  .header{display:block; width:100%; text-align:center;}
-  .sub{color: #8f8f8fff}
-  @media (max-width:520px){ .pick-grid{grid-template-columns:1fr;} }
-  .file-label {
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 28px 20px 40px;
+    background: #f5f5f5;
+    min-height: 100vh;
+  }
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 20px;
+  }
+  .header { text-align: center; margin-bottom: 24px; }
+  .header img { max-width: 160px; height: auto; margin-bottom: 12px; }
+  .header h2 { font-size: 20px; font-weight: 700; margin: 0; color: #1a1a1a; line-height: 1.3; }
+  .header p { font-size: 14px; color: #777; margin: 6px 0 0; }
+
+  form { display: grid; gap: 12px; }
+
+  .input-wrap { position: relative; }
+  input[type=text], input[type=tel] {
+    width: 100%;
     padding: 14px;
-    border: 1px dashed #ccc;
-    border-radius: 12px;
+    font-size: 16px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 14px;
+    background: #fafafa;
+    color: #1a1a1a;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    -webkit-appearance: none;
+  }
+  input[type=text]:focus, input[type=tel]:focus {
+    border-color: #ef5f60;
+    box-shadow: 0 0 0 3px rgba(239,95,96,0.12);
+    background: #fff;
+  }
+
+  .section-label { font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+
+  .pick-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+  .file-label {
+    padding: 20px 12px;
+    border: 2px solid #e8e8e8;
+    border-radius: 16px;
     text-align: center;
     cursor: pointer;
     background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: border-color .15s, background .15s, transform .1s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
-  .file-label:hover { background: #f0f0f0; }
-  .preview { display:none; text-align:center; }
-  .preview img { max-width:100%; max-height:280px; border-radius:12px; border:1px solid #ddd; }
+  .file-label .icon { font-size: 28px; line-height: 1; }
+  .file-label strong { font-size: 13px; color: #1a1a1a; display: block; }
+  .file-label span { font-size: 12px; color: #999; }
+  .file-label:active { background: #ffeaea; border-color: #ef5f60; transform: scale(0.97); }
+  .file-label.selected { background: #fff5f5; border-color: #ef5f60; }
+
+  .preview { display:none; text-align:center; border-radius: 16px; overflow: hidden; border: 1.5px solid #e8e8e8; }
+  .preview img { max-width:100%; max-height:260px; display:block; width:100%; object-fit:cover; }
+  .preview-name { padding: 8px 12px; font-size: 13px; color: #666; background: #fafafa; }
+
+  .hint { font-size: 12px; color: #aaa; text-align: center; }
+
+  button.submit {
+    background: #ef5f60;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    min-height: 54px;
+    letter-spacing: .01em;
+    transition: background .15s, transform .1s, box-shadow .15s;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 4px 14px rgba(239,95,96,0.35);
+  }
+  button.submit:active { background: #d94f50; transform: scale(0.98); box-shadow: none; }
+
+  .err {
+    color: #b00020;
+    background: #fff2f2;
+    border: 1.5px solid #ffd0d0;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 14px;
+  }
+
+  details {
+    font-size: 12px;
+    color: #aaa;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+  details summary { cursor: pointer; color: #bbb; list-style: none; display: flex; align-items: center; gap: 6px; }
+  details summary::before { content: "▸"; font-size: 10px; }
+  details[open] summary::before { content: "▾"; }
+  details p { margin: 10px 0 0; line-height: 1.6; color: #999; }
+  details a { color: #ef5f60; }
 </style>
 </head>
 <body>
+<div class="card">
 
-<div class="header">
-    <img src="https://cdn.prod.website-files.com/65a66d17d740f6ccfb7f289a/65a673f43ee0d57315632e33_logo-lacroixdeslandes.png" class="logo"/>
-    <h2 >Jeu Concours 📸 Envoyez votre photo</h2>
+  <div class="header">
+    <img src="https://cdn.prod.website-files.com/65a66d17d740f6ccfb7f289a/65a673f43ee0d57315632e33_logo-lacroixdeslandes.png" alt="La Croix des Landes"/>
+    <h2>Jeu Concours 📸<br/>Envoyez votre photo</h2>
+    <p>Participez et tentez de gagner !</p>
+  </div>
+
+  ${error ? `<div class="err">${error}</div>` : ""}
+
+  <form method="post" action="/upload" enctype="multipart/form-data">
+
+    <div class="input-wrap">
+      <input type="text" name="prenom" placeholder="Votre prénom" required />
+    </div>
+
+    <div class="input-wrap">
+      <input type="tel" name="telephone" placeholder="Votre numéro de téléphone" pattern="[\d\s.\-()+ ]{7,20}" title="Numéro de téléphone invalide" required />
+    </div>
+
+    <div class="section-label">Votre photo</div>
+
+    <div class="pick-grid">
+      <label for="photo_camera" class="file-label" id="label_camera">
+        <span class="icon">📷</span>
+        <strong>Prendre une photo</strong>
+        <span>Caméra</span>
+      </label>
+      <label for="photo_library" class="file-label" id="label_library">
+        <span class="icon">🖼️</span>
+        <strong>Choisir une image</strong>
+        <span>Galerie</span>
+      </label>
+    </div>
+
+    <input id="photo_camera" type="file" name="photo" accept="image/jpeg,image/png" capture="environment" hidden />
+    <input id="photo_library" type="file" name="photo" accept="image/jpeg,image/png" hidden />
+
+    <div id="preview" class="preview">
+      <img id="preview-img"/>
+      <div id="file-name" class="preview-name"></div>
+    </div>
+
+    <div class="hint">JPG / PNG — max 10 MB — 3 participations / jour</div>
+
+    <button class="submit" type="submit">Envoyer ma photo</button>
+
+    <details>
+      <summary>Informations RGPD</summary>
+      <p>
+        En soumettant votre photo, vous acceptez que celle-ci soit utilisée sur les réseaux sociaux, sur le site internet, ainsi que sur le flyer correspondant si vous êtes l'heureux gagnant.<br/><br/>
+        Vos données personnelles (prénom et numéro de téléphone) sont utilisées uniquement pour vous contacter en cas de victoire. Elles sont intégrées dans le nom du fichier photo stocké sur nos serveurs.<br/><br/>
+        Les photos non sélectionnées pour publication sont automatiquement supprimées de nos serveurs au bout d'un an.<br/><br/>
+        Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données en nous contactant directement via <a href="mailto:lacroixdeslandes@orange.fr">lacroixdeslandes@orange.fr</a>.
+      </p>
+    </details>
+
+  </form>
+
 </div>
-
-
-${error ? `<div class="err">${error}</div>` : ""}
-
-<form method="post" action="/upload" enctype="multipart/form-data">
-  <input name="prenom" placeholder="Votre prénom*" required />
-
-  <div class="pick-grid">
-    <label for="photo_camera" class="file-label">
-      📷 <strong>Prendre une photo</strong><br/>
-      <span class="small">Caméra (mobile)</span>
-    </label>
-
-    <label for="photo_library" class="file-label">
-      🖼️ <strong>Choisir une image</strong><br/>
-      <span class="small">Galerie / fichiers</span>
-    </label>
-  </div>
-
-  <input id="photo_camera" type="file" name="photo" accept="image/jpeg,image/png" capture="environment" hidden />
-  <input id="photo_library" type="file" name="photo" accept="image/jpeg,image/png" hidden />
-
-  <div id="file-name" class="small"></div>
-
-  <div id="preview" class="preview">
-    <img id="preview-img"/>
-  </div>
-
-  <div class="small">JPG / PNG — max 10 MB — 3 photos / jour</div>
-
-  <button class="submit" type="submit">Envoyer</button>
-
-  <p class="small sub">En soumettant votre photo, vous acceptez que celle-ci soit utilisée sur les réseaux sociaux, sur le site internet, ainsi que sur le flyer correspondant si vous êtes l'heureux gagnant.</p>
-</form>
 
 <script>
   const cam = document.getElementById("photo_camera");
@@ -136,19 +245,23 @@ ${error ? `<div class="err">${error}</div>` : ""}
   const fileName = document.getElementById("file-name");
   const preview = document.getElementById("preview");
   const img = document.getElementById("preview-img");
+  const labelCam = document.getElementById("label_camera");
+  const labelLib = document.getElementById("label_library");
 
-  function show(file) {
+  function show(file, activeLabel, inactiveLabel) {
     fileName.textContent = file.name;
     const r = new FileReader();
     r.onload = e => { img.src = e.target.result; preview.style.display = "block"; };
     r.readAsDataURL(file);
+    activeLabel.classList.add("selected");
+    inactiveLabel.classList.remove("selected");
   }
 
   cam.addEventListener("change", () => {
-    if (cam.files.length) { lib.value=""; show(cam.files[0]); }
+    if (cam.files.length) { lib.value=""; show(cam.files[0], labelCam, labelLib); }
   });
   lib.addEventListener("change", () => {
-    if (lib.files.length) { cam.value=""; show(lib.files[0]); }
+    if (lib.files.length) { cam.value=""; show(lib.files[0], labelLib, labelCam); }
   });
 </script>
 
@@ -208,15 +321,19 @@ app.post(
   upload.single("photo"),
   async (req, res) => {
     try {
-      const { prenom } = req.body;
+      const { prenom, telephone } = req.body;
       const file = req.file;
 
-      if (!prenom || !file) {
-        return res.status(400).type("html").send(renderForm({ error: "Prénom et image requis." }));
+      const phoneDigits = telephone.replace(/[\s.\-()]/g, "");
+      if (!prenom || !telephone || !file) {
+        return res.status(400).type("html").send(renderForm({ error: "Prénom, téléphone et image requis." }));
+      }
+      if (!/^(\+?\d{7,15})$/.test(phoneDigits)) {
+        return res.status(400).type("html").send(renderForm({ error: "Numéro de téléphone invalide." }));
       }
 
       const folder = process.env.CLOUDINARY_FOLDER || "uploads";
-      const publicId = `${safe(prenom)}_${Date.now()}`;
+      const publicId = `${safe(prenom)}_${safe(telephone)}_${Date.now()}`;
 
       await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
